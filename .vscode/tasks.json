@@ -1,0 +1,94 @@
+{
+    // tasks.json schema: https://code.visualstudio.com/docs/reference/tasks-appendix
+    // Top-level interface: TaskConfiguration. Constant required field.
+    "version": "2.0.0",
+    "tasks": [
+        {
+            // --- TaskDescription fields (VS Code core schema) ---
+            "label": "cargo build (debug)", // referenced from launch.json's preLaunchTask.
+            "type": "shell", // schema: "shell" | "process". shell runs the command inside cmd/pwsh.
+            "command": "cargo",
+            "args": [
+                "build"
+            ],
+            "problemMatcher": [
+                "$rustc"
+            ], // built-in matcher shipped with VS Code; matches rustc's diagnostic format.
+            "group": { // schema: 'build' | 'test' | { kind, isDefault }.
+                "kind": "build",
+                "isDefault": true // makes this the default task for Ctrl+Shift+B.
+            },
+            "presentation": { // PresentationOptions in the schema.
+                "reveal": "silent", // 'never' | 'silent' | 'always'. silent = only reveal on error.
+                "panel": "shared", // 'shared' | 'dedicated' | 'new'.
+                "clear": true // wipe the terminal between runs.
+            }
+        },
+        {
+            "label": "cargo build (release)",
+            "type": "shell",
+            "command": "cargo",
+            "args": [
+                "build",
+                "--release"
+            ],
+            "problemMatcher": [
+                "$rustc"
+            ],
+            "group": "build"
+            // Note: your Cargo.toml has [profile.release] strip = true. The release binary will have no debug
+            // symbols, so attaching cppvsdbg to target/release/apogee.exe will give you no source/locals.
+            // If you want a debuggable optimized build, add a [profile.release-with-debug] custom profile that
+            // inherits release but sets strip = "none" and debug = true.
+        },
+        {
+            "label": "cargo test (compile only)",
+            "type": "shell",
+            "command": "cargo",
+            "args": [
+                "test",
+                "--no-run"
+            ], // compile test binaries without running them.
+            "problemMatcher": [
+                "$rustc"
+            ],
+            "group": "test"
+        },
+        {
+            "label": "cargo clippy",
+            "type": "shell",
+            "command": "cargo",
+            "args": [
+                "clippy",
+                "--all-targets",
+                "--",
+                "-D",
+                "warnings"
+            ],
+            "problemMatcher": [
+                "$rustc"
+            ], // clippy uses rustc's diagnostic format, so $rustc matches its output.
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            }
+        },
+        {
+            "label": "cargo fmt --check",
+            "type": "shell",
+            "command": "cargo",
+            "args": [
+                "fmt",
+                "--",
+                "--check"
+            ],
+            "problemMatcher": [], // rustfmt's output isn't matched by $rustc; leave empty.
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        }
+    ]
+}

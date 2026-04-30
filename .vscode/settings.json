@@ -1,0 +1,26 @@
+{
+    // ============================================================================
+    // Project Settings
+    // ============================================================================
+    "editor.suggest.showInlineDetails": true,
+    "editor.formatOnSave": true,
+    "errorLens.codeLensEnabled": true,
+    "errorLens.messageEnabled": false,
+    "errorLens.codeLensTemplate": "$severity $message",
+    "errorLens.codeLensLength": {
+        "min": 0,
+        "max": 500
+    },
+    "errorLens.messageMaxChars": 500,
+    "errorLens.removeLinebreaks": true,
+    "errorLens.replaceLinebreaksSymbol": " ",
+    "[rust]": {
+        "editor.semanticHighlighting.enabled": false
+    },
+    "debug.allowBreakpointsEverywhere": true,
+    "rust-analyzer.debug.engine": "ms-vscode.cpptools",
+    "rust-analyzer.lens.enable": true,
+    "rust-analyzer.lens.run.enable": true,
+    "rust-analyzer.lens.debug.enable": true,
+    "rust-analyzer.check.command": "clippy",
+}

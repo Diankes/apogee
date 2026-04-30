@@ -1,0 +1,48 @@
+{
+    // VS Code launch.json schema version (constant — VS Code core, not cpptools).
+    "version": "0.2.0",
+    "configurations": [
+        {
+            // --- Standard launch.json keys (VS Code core, not cpptools) ---
+            "name": "Debug apogee (debug build, sample.csv)",
+            "type": "cppvsdbg", // cpptools schema, line 5620 — Windows-only debugger.
+            "request": "launch", // matches configurationAttributes.launch (line 5635).
+            // --- cppvsdbg required keys ---
+            "program": "${workspaceFolder}/target/debug/apogee.exe", // schema line 5642 (required). Forward slashes work on Windows.
+            "cwd": "${workspaceFolder}", // schema line 5655 (required). Sets cwd for argv-relative paths like imu.csv.
+            // --- cppvsdbg optional keys ---
+            "args": [ // schema line 5647.
+                "--file",
+                "${workspaceFolder}/imu.csv"
+            ],
+            "stopAtEntry": false, // schema line 5687.
+            "console": "externalTerminal", // schema line 5707. Enum: internalConsole | integratedTerminal | externalTerminal | newExternalWindow.
+            // ratatui needs a real TTY — internalConsole will not work. externalTerminal opens VS Code's
+            // configured external terminal; newExternalWindow opens a fresh console window.
+            "environment": [ // schema line 5660. Array of {name, value} objects.
+                {
+                    "name": "RUST_BACKTRACE",
+                    "value": "1"
+                },
+                {
+                    "name": "RUST_LIB_BACKTRACE",
+                    "value": "1"
+                } // also expand backtraces from library dependencies.
+            ],
+            // --- Standard launch.json keys (VS Code core) ---
+            "preLaunchTask": "cargo build (debug)" // matches the label in tasks.json below.
+            // --- Keys deliberately NOT set, with reasons (all from cpptools schema) ---
+            // "visualizerFile": Rust 1.71+ embeds std natvis into PDBs (core/alloc/std), so Vec/String/HashMap/Option already render.
+            //                   Schema types this as a single string (line 5698) — array form is undocumented in this version.
+            //                   Add ONLY if you ship custom .natvis files of your own.
+            // "symbolOptions":  Default search behaviour (PDB next to .exe) is correct for pure Rust on MSVC. Add only to enable
+            //                   Microsoft Symbol Server (line 5794) for stepping into Windows DLLs.
+            // "sourceFileMap":  Only needed when source paths in the PDB differ from disk (cross-machine builds, CI artefacts).
+            // "requireExactSource": Default true (line 5776) — correct for active development.
+            // "enableDebugHeap":    Default false (line 5734) — leave off; it's MSVC CRT debug heap, irrelevant to Rust.
+            // "externalConsole":    DEPRECATED in favour of "console" (line 5707). Don't use both.
+            // "envFile":            Use only if you prefer a .env over inline "environment".
+            // "dumpPath":           For post-mortem .dmp file analysis, not live debugging.
+        }
+    ]
+}
